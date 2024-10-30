@@ -36,7 +36,7 @@ function writeJobs(jobs) {
 }
 
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.sendFile(path.join(__dirname, '../index.html'));
 });
 
 // Endpoint pour récupérer les offres d'emploi
