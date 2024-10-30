@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
+import JobCard from "./JobCard"; 
 
 function JobBoard() {
   const [jobs, setJobs] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/jobs")  // Utilise l'URL de l'API pour récupérer les données
+    fetch("http://localhost:5000/api/jobs")  
       .then((response) => response.json())
       .then((data) => setJobs(data))
       .catch((error) => console.error("Erreur lors de la récupération des offres :", error));
@@ -13,16 +14,11 @@ function JobBoard() {
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">Offres d'emploi</h2>
-      <ul>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {jobs.map((job, index) => (
-          <li key={index} className="border-b border-gray-200 p-2">
-            <h3 className="font-semibold">{job.titre}</h3>
-            <p>{job.entreprise}</p>
-            <p>{job.location}</p>
-            <p>{job.description}</p>
-          </li>
+          <JobCard key={index} job={job} /> 
         ))}
-      </ul>
+      </div>
     </div>
   );
 }

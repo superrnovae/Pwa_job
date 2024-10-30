@@ -1,30 +1,56 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 function NotificationsButton() {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    if ('serviceWorker' in navigator && 'PushManager' in window) {
-      navigator.serviceWorker.ready.then(swReg => {
-        swReg.pushManager.getSubscription().then(subscription => {
-          if (subscription === null) {
-            swReg.pushManager.subscribe({
-              userVisibleOnly: true,
-              applicationServerKey: process.env.REACT_APP_PUBLIC_VAPID_KEY
-            }).then(newSubscription => {
-              fetch('/subscribe', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(newSubscription)
-              });
+    // Récupérer la clé VAPID publique depuis le backend
+    fetch("http://localhost:5000/vapidPublicKey")
+      .then(response => response.json())
+      .then(data => {
+        const publicVapidKey = data.publicVapidKey;
+
+        // Enregistrer le Service Worker et souscrire aux notifications
+        if ('serviceWorker' in navigator && 'PushManager' in window) {
+          navigator.serviceWorker.ready.then(swReg => {
+            swReg.pushManager.getSubscription().then(subscription => {
+              if (subscription === null) {
+                swReg.pushManager.subscribe({
+                  userVisibleOnly: true,
+                  applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
+                }).then(newSubscription => {
+                  // Envoyer l'abonnement au serveur
+                  fetch("http://localhost:5000/subscribe", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newSubscription)
+                  });
+                });
+              }
             });
-          }
-        });
+          });
+        }
+      });
+
+    // Écouter les notifications reçues depuis le service worker
+    if (navigator.serviceWorker) {
+      navigator.serviceWorker.addEventListener("message", (event) => {
+        const newNotification = event.data;
+        setNotifications((prev) => [newNotification, ...prev]);
+
+        // Affiche une alerte et recharge la page
+        alert(`Nouvelle offre ajoutée: ${newNotification.title}`);
+        window.location.reload(); // Recharge la page pour afficher les mises à jour
       });
     }
   }, []);
+
+  function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const rawData = window.atob(base64);
+    return new Uint8Array([...rawData].map(char => char.charCodeAt(0)));
+  }
 
   return (
     <div>

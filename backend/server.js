@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
-require('dotenv').config(); // Charger les variables d'environnement avant de les utiliser
+require('dotenv').config();
 
 const app = express();
 app.use(cors());
@@ -16,10 +16,15 @@ const DATA_PATH = path.join(__dirname, 'db', 'data.json'); // Chemin absolu vers
 const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
 const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
 
-// Vérifie que les clés VAPID sont bien définies
+// Endpoint pour fournir la clé VAPID publique au frontend
+app.get('/vapidPublicKey', (req, res) => {
+  res.json({ publicVapidKey });
+});
+
+// Vérification des clés VAPID
 if (!publicVapidKey || !privateVapidKey) {
   console.error('Les clés VAPID ne sont pas définies. Vérifiez votre fichier .env.');
-  process.exit(1); // Arrête le serveur si les clés ne sont pas définies
+  process.exit(1); 
 }
 
 webpush.setVapidDetails(
@@ -78,7 +83,10 @@ app.post('/api/jobs', (req, res) => {
 // Endpoint pour enregistrer un abonné aux notifications
 app.post('/subscribe', (req, res) => {
   const subscription = req.body;
-  subscribers.push(subscription);
+  const isSubscribed = subscribers.some(sub => JSON.stringify(sub) === JSON.stringify(subscription));
+  if (!isSubscribed) {
+    subscribers.push(subscription);
+  }
   res.status(201).json({});
 });
 
@@ -87,7 +95,8 @@ function sendNotification(job) {
   const payload = JSON.stringify({
     title: 'Nouvelle Offre d\'Emploi',
     body: `Un nouvel emploi est disponible : ${job.titre} chez ${job.entreprise}`,
-    data: job
+    icon: '/logo192.png', 
+    data: { url: '/' } 
   });
 
   subscribers.forEach(subscription => {

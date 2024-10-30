@@ -7,7 +7,7 @@ function Navbar() {
           <div className="flex space-x-4">
             <div>
               <a href="#" className="flex items-center py-5 px-2 text-gray-700">
-                <span className="font-bold">Mustapha JobBoard</span>
+                <span className="font-bold">JobBoard</span>
               </a>
             </div>
           </div>
