@@ -19,6 +19,13 @@
       "entreprise": "Atos",
       "description": "Expertise en analyse de données et en machine learning pour aider les entreprises à tirer parti de leurs données et optimiser leur prise de décision.",
       "location": "Toulouse, France"
+    }, 
+      {
+      "id": 3,
+      "titre": "Consultant en Data Science",
+      "entreprise": "Atos",
+      "description": "Expertise en analyse de données et en machine learning pour aider les entreprises à tirer parti de leurs données et optimiser leur prise de décision.",
+      "location": "Toulouse, France"
     }
   ]
   
