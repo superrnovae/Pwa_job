@@ -7,7 +7,7 @@ const urlsToCache = [
     // Add any other assets you want to cache
 ];
 
-this.addEventListener('install', event => {
+self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then((cache) => {
@@ -16,7 +16,7 @@ this.addEventListener('install', event => {
     );
 });
 
-this.addEventListener('fetch', event => {
+self.addEventListener('fetch', event => {
     event.respondWith(
         caches.match(event.request)
             .then((response) => {
@@ -25,7 +25,7 @@ this.addEventListener('fetch', event => {
     );
 });
 
-this.addEventListener('activate', event => {
+self.addEventListener('activate', event => {
     const cacheWhitelist = [CACHE_NAME];
     event.waitUntil(
         caches.keys().then((cacheNames) => {
@@ -39,3 +39,14 @@ this.addEventListener('activate', event => {
         })
     );
 });
+
+self.addEventListener('push', event => {
+    const data = event.data.json()
+    const title = data.title
+    const options = {
+        body: data.body,
+        icon: data.icon,
+    };
+
+    event.waitUntil(self.registration.showNotification(title, options));
+})
