@@ -4,7 +4,12 @@ const CACHE_NAME = 'my-cache-v1';
 const urlsToCache = [
     '/',
     '/index.html',
-    // Add any other assets you want to cache
+    '/src/main.jsx',
+    '/src/components/Jobboard.jsx',
+    '/src/components/JobCard.jsx',
+    '/src/components/Navbar.jsx',
+    '/src/components/NotificationsButton.jsx',
+    // Ajoutez ici les autres fichiers à mettre en cache
 ];
 
 self.addEventListener('install', event => {
@@ -41,12 +46,13 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('push', event => {
-    const data = event.data.json()
-    const title = data.title
+    const data = event.data.json();
+    const title = data.title;
     const options = {
         body: data.body,
-        icon: data.icon,
+        icon: '/logo192.png',
+        data: data.data
     };
 
     event.waitUntil(self.registration.showNotification(title, options));
-})
+});

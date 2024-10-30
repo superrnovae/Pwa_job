@@ -4,11 +4,26 @@ function NotificationsButton() {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    // Ecouter les messages de notification
-    navigator.serviceWorker.addEventListener("message", (event) => {
-      const newNotification = event.data;
-      setNotifications((prev) => [newNotification, ...prev]);
-    });
+    if ('serviceWorker' in navigator && 'PushManager' in window) {
+      navigator.serviceWorker.ready.then(swReg => {
+        swReg.pushManager.getSubscription().then(subscription => {
+          if (subscription === null) {
+            swReg.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: process.env.REACT_APP_PUBLIC_VAPID_KEY
+            }).then(newSubscription => {
+              fetch('/subscribe', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newSubscription)
+              });
+            });
+          }
+        });
+      });
+    }
   }, []);
 
   return (

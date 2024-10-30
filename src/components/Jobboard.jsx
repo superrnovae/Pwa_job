@@ -4,7 +4,7 @@ function JobBoard() {
   const [jobs, setJobs] = useState([]);
 
   useEffect(() => {
-    fetch("../db/data.json")
+    fetch("http://localhost:5000/api/jobs")  // Utilise l'URL de l'API pour récupérer les données
       .then((response) => response.json())
       .then((data) => setJobs(data))
       .catch((error) => console.error("Erreur lors de la récupération des offres :", error));
@@ -16,8 +16,8 @@ function JobBoard() {
       <ul>
         {jobs.map((job, index) => (
           <li key={index} className="border-b border-gray-200 p-2">
-            <h3 className="font-semibold">{job.title}</h3>
-            <p>{job.name}</p>
+            <h3 className="font-semibold">{job.titre}</h3>
+            <p>{job.entreprise}</p>
             <p>{job.location}</p>
             <p>{job.description}</p>
           </li>
