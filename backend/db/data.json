@@ -1,0 +1,24 @@
+[
+    {
+      "id": 1,
+      "titre": "Développeur Python",
+      "entreprise": "Capgemini",
+      "description": "Nous recherchons un développeur Python passionné, avec des compétences en Django et en analyse de données, pour contribuer à des projets innovants.",
+      "location": "Paris, France"
+    },
+    {
+      "id": 2,
+      "titre": "Chef de Projet IT",
+      "entreprise": "Savencia",
+      "description": "Responsable de la gestion des projets IT, de la planification à la livraison, avec des compétences en gestion d’équipe et coordination de projet.",
+      "location": "Viroflay, France"
+    },
+    {
+      "id": 3,
+      "titre": "Consultant en Data Science",
+      "entreprise": "Atos",
+      "description": "Expertise en analyse de données et en machine learning pour aider les entreprises à tirer parti de leurs données et optimiser leur prise de décision.",
+      "location": "Toulouse, France"
+    }
+  ]
+  
