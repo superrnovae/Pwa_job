@@ -4,6 +4,7 @@ const CACHE_NAME = 'my-cache-v1';
 const urlsToCache = [
     '/',
     '/index.html',
+    '/main.jsx'
     // Add any other assets you want to cache
 ];
 
