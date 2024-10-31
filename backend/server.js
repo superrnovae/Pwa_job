@@ -16,33 +16,34 @@ const DATA_PATH = path.join(__dirname, 'db', 'data.json'); // Chemin absolu vers
 const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
 const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
 
-// Endpoint pour fournir la clé VAPID publique au frontend
-app.get('/vapidPublicKey', (req, res) => {
-  res.json({ publicVapidKey });
-});
-
 // Vérification des clés VAPID
 if (!publicVapidKey || !privateVapidKey) {
   console.error('Les clés VAPID ne sont pas définies. Vérifiez votre fichier .env.');
   process.exit(1); 
 }
 
+// Configuration des clés VAPID pour Web Push
 webpush.setVapidDetails(
-  'mailto:tonemail@example.com', // Remplacez par votre adresse e-mail
+  'mailto:lozi.amina.sio@example.com', // Remplacez par votre adresse e-mail
   publicVapidKey,
   privateVapidKey
 );
 
 let subscribers = []; // Liste des abonnés aux notifications push
 
+// Endpoint pour fournir la clé VAPID publique au frontend
+app.get('/vapidPublicKey', (req, res) => {
+  res.json({ publicVapidKey });
+});
+
 // Fonction pour lire les données du fichier JSON
 function readJobs() {
   try {
     const data = fs.readFileSync(DATA_PATH, 'utf-8');
-    return JSON.parse(data); // Enlève ".jobs" pour renvoyer directement l'objet JSON
+    return JSON.parse(data); // Renvoie directement l'objet JSON
   } catch (error) {
     console.error("Erreur lors de la lecture du fichier JSON :", error);
-    return { jobs: [] }; // Renvoyer un tableau vide si la lecture échoue
+    return { jobs: [] }; // Retourne un tableau vide si la lecture échoue
   }
 }
 
@@ -55,11 +56,6 @@ function writeJobs(jobs) {
     console.error("Erreur lors de l'écriture dans le fichier JSON :", error);
   }
 }
-
-// Route pour servir le fichier HTML principal
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../index.html')); 
-});
 
 // Endpoint pour récupérer les offres d'emploi
 app.get('/api/jobs', (req, res) => {
@@ -95,8 +91,8 @@ function sendNotification(job) {
   const payload = JSON.stringify({
     title: 'Nouvelle Offre d\'Emploi',
     body: `Un nouvel emploi est disponible : ${job.titre} chez ${job.entreprise}`,
-    icon: '/logo192.png', 
-    data: { url: '/' } 
+    icon: '/logo192.png', // Icône de notification (doit exister dans le dossier public)
+    data: { url: '/' } // Redirection vers la page d'accueil lors du clic sur la notification
   });
 
   subscribers.forEach(subscription => {
