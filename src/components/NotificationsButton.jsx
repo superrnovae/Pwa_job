@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
 function NotificationsButton() {
   const [notifications, setNotifications] = useState([]);
-
+  const navigate = useNavigate();
+  
   useEffect(() => {
 
     requestPermissionToShowNotifications()
@@ -10,12 +12,19 @@ function NotificationsButton() {
     // Écouter les notifications reçues depuis le service worker
     if (navigator.serviceWorker) {
       navigator.serviceWorker.addEventListener("message", (event) => {
-        console.log(event)
+        
         const newNotification = event.data;
+        console.log(newNotification)
         setNotifications((prev) => [newNotification, ...prev]);
+        
+        if(event.data.type === "NOTIFICATION_CLICKED")
+        {
+            const id = newNotification.data.id;
+            navigate(`/offre/${id}`);
+        }
       });
     }
-  }, []);
+  }, [navigate]);
 
   function urlBase64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);

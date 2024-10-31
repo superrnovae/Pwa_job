@@ -72,6 +72,20 @@ app.post("/api/jobs", (req, res) => {
   res.status(201).json(newJob);
 });
 
+// Endpoint pour récupérer une offre spécifique par ID
+app.get("/api/jobs/:id", (req, res) => {
+  const jobId = parseInt(req.params.id); 
+  const data = readJobs(); 
+
+  const job = data.jobs.find((job) => job.id === jobId);
+
+  if (job) {
+    res.json(job); 
+  } else {
+    res.status(404).json({ message: "Offre non trouvée" }); 
+  }
+});
+
 // Endpoint pour enregistrer un abonné aux notifications
 app.post("/subscribe", (req, res) => {
   const subscription = req.body;
@@ -90,11 +104,10 @@ function sendNotification(job) {
     title: "Nouvelle Offre d'Emploi",
     body: `Un nouvel emploi est disponible : ${job.titre} chez ${job.entreprise}`,
     icon: "/logo192.png",
-    data: { url: "/" },
+    data: { id: job.id },
   });
 
   subscribers.forEach((subscription) => {
-    console.log(subscription)
     webpush.sendNotification(subscription, payload).catch((error) => {
       console.error("Erreur lors de l'envoi de notification:", error);
     });

@@ -3,14 +3,14 @@ export function register(config) {
     // The URL constructor is available in all browsers that support SW.
     window.addEventListener('load', () => {
       // Is not localhost. Just register service worker
-      registerValidSW("custom-service-worker.js", config);
+      registerValidSW("./custom-service-worker.js", config);
     });
   }
 }
 
 function registerValidSW(swUrl, config) {
   navigator.serviceWorker
-    .register(swUrl, { scope: "/"})
+    .register(swUrl, { scope: "/"} )
     .then(registration => {
 
       registration.onupdatefound = () => {

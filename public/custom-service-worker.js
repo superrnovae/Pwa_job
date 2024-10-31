@@ -2,7 +2,7 @@
 
 const CACHE_NAME = 'my-cache-v1';
 const urlsToCache = [
-    '/', '/index.html', '/src/main.jsx', '/src/components/Jobboard.jsx',
+    '/', '/index.html', '/src/Offline.jsx', '/src/main.jsx', '/src/components/Jobboard.jsx',
     '/src/components/JobCard.jsx', '/src/components/Navbar.jsx',
     '/src/components/NotificationsButton.jsx', '/manifest.json', '/logo192.png', '/logo512.png'
 ];
@@ -15,8 +15,10 @@ self.addEventListener('install', event => {
 
 self.addEventListener('fetch', event => {
     event.respondWith(
-        caches.match(event.request).then(response => response || fetch(event.request))
-    );
+        fetch(event.request).catch(function() {
+          return caches.match(event.request);
+        })
+      );
 });
 
 self.addEventListener('activate', event => {
@@ -37,7 +39,6 @@ self.addEventListener('activate', event => {
 // Gérer les notifications push
 self.addEventListener('push', event => {
     const data = event.data.json();
-    console.log(data)
     const title = data.title;
     const options = {
         body: data.body,
@@ -51,14 +52,15 @@ self.addEventListener('push', event => {
 // Gérer les clics sur la notification
 self.addEventListener('notificationclick', event => {
     event.notification.close();
+    const data = event.notification.data;
 
     // Redirige vers la page principale en cas de clic
     event.waitUntil(
-        clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
-            if (clientList.length > 0) {
-                return clientList[0].focus();
-            }
-            return clients.openWindow('/');
+        clients.matchAll({ type: 'window', includeUncontrolled: true })
+        .then(clientList => {
+            clientList.forEach(client => {
+                client.postMessage({ type: 'NOTIFICATION_CLICKED', data: data })
+            })
         })
     );
 });
