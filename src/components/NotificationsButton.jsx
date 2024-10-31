@@ -43,6 +43,38 @@ function NotificationsButton() {
         window.location.reload(); // Recharge la page pour afficher les mises à jour
       });
     }
+
+    if(window.Notification) 
+    {
+      if(Notification.permission === "granted")
+      {
+          console.log("Permission to show notifications had already been granted.");
+      }
+      else if(Notification.permission === "denied")
+      {
+          console.log("Permission to show notifications was denied.");
+      }
+      else {
+        Notification.requestPermission().then(permission => {
+
+          if(permission === "granted")
+          {
+            console.log("Notification permission granted.")
+          }
+          else if(permission === "denied")
+          {
+            console.log("Notification permission denied.")
+          }
+          else {
+            console.log("Notification permission dismissed");
+          }
+        })
+        .catch(error => {
+          console.log('Error requesting notification permission:', error)
+        })
+      }
+
+    }
   }, []);
 
   function urlBase64ToUint8Array(base64String) {
