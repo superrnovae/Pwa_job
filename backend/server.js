@@ -31,7 +31,7 @@ webpush.setVapidDetails(
   privateVapidKey
 );
 
-let subscribers = [];
+const subscribers = [];
 
 app.get("/vapidPublicKey", (req, res) => {
   res.json({ publicVapidKey });
@@ -58,7 +58,6 @@ function writeJobs(jobs) {
 
 app.get("/api/jobs", (req, res) => {
   const data = readJobs();
-  console.log("Données lues du fichier JSON :", data);
   res.json(data.jobs);
 });
 
@@ -95,6 +94,7 @@ function sendNotification(job) {
   });
 
   subscribers.forEach((subscription) => {
+    console.log(subscription)
     webpush.sendNotification(subscription, payload).catch((error) => {
       console.error("Erreur lors de l'envoi de notification:", error);
     });

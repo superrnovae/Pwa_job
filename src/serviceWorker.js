@@ -9,7 +9,6 @@ export function register(config) {
 }
 
 function registerValidSW(swUrl, config) {
-  console.log("here")
   navigator.serviceWorker
     .register(swUrl, { scope: "/"})
     .then(registration => {

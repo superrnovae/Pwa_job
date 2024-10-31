@@ -37,6 +37,7 @@ self.addEventListener('activate', event => {
 // Gérer les notifications push
 self.addEventListener('push', event => {
     const data = event.data.json();
+    console.log(data)
     const title = data.title;
     const options = {
         body: data.body,
