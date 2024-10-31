@@ -20,6 +20,13 @@
       "entreprise": "Atos",
       "description": "Expertise en analyse de données et en machine learning pour aider les entreprises à tirer parti de leurs données et optimiser leur prise de décision.",
       "location": "Toulouse, France"
+    },
+    {
+      "id": 4,
+      "titre": "Développeur Python Test 2",
+      "entreprise": "Capgemini Test",
+      "description": "Nous recherchons un développeur Python passionné, avec des compétences en Django et en analyse de données, pour contribuer à des projets innovants.",
+      "location": "Paris, France2"
     }
   ]
 }
