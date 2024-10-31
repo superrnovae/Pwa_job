@@ -20,11 +20,16 @@ function OffrePage() {
   }
 
   return (
-    <div>
-      <h2>{offer.titre}</h2>
-      <p><strong>Entreprise :</strong> {offer.entreprise}</p>
-      <p><strong>Description :</strong> {offer.description}</p>
-      <p><strong>Lieu :</strong> {offer.location}</p>
+    <div className="flex justify-center items-center mt-20 ">
+      <div className="bg-white border border-gray-300 rounded-md p-4 shadow transition-shadow duration-200">
+        <h2 className="text-lg font-semibold mb-1 text-blue-700">{offer.titre}</h2>
+        <h3 className="text-md text-gray-600 mb-1">{offer.entreprise}</h3>
+        <p className="text-sm text-gray-500 mb-1">{offer.location}</p>
+        <p className="text-sm text-gray-600">{offer.description}</p>
+        <button class="my-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          Postuler
+        </button>
+      </div>
     </div>
   );
 }
